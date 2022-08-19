@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/moonPhase/static/css/main.9a0d5e03.css",
-    "main.js": "/moonPhase/static/js/main.231c4490.js",
+    "main.js": "/moonPhase/static/js/main.cf488179.js",
     "static/media/sky4.jpg": "/moonPhase/static/media/sky4.609d1b501b60df547e97.jpg",
     "index.html": "/moonPhase/index.html",
     "main.9a0d5e03.css.map": "/moonPhase/static/css/main.9a0d5e03.css.map",
-    "main.231c4490.js.map": "/moonPhase/static/js/main.231c4490.js.map"
+    "main.cf488179.js.map": "/moonPhase/static/js/main.cf488179.js.map"
   },
   "entrypoints": [
     "static/css/main.9a0d5e03.css",
-    "static/js/main.231c4490.js"
+    "static/js/main.cf488179.js"
   ]
 }
