@@ -27,8 +27,8 @@ function App() {
       transition={{ duration: 0.5 }}>
       <Nav />
       <Routes>
-          <Route path="moonPhase/" element={<MoonPhaseNow width={width} />} />
-          <Route path="moonPhase/calendar" element={<MoonCalendar width={width} />} />
+          <Route path="/" element={<MoonPhaseNow width={width} />} />
+          <Route path="/calendar" element={<MoonCalendar width={width} />} />
       </Routes>
       </motion.div>
       <Footer />

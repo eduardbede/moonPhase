@@ -1,12 +1,16 @@
 import Moon from "react-moon";
-import { Moon as Moon2, JulianDay } from "lunarphase-js";
+/* import { Moon as Moon2 } from "lunarphase-js"; */
 import { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import { WiSunrise, WiSunset, WiMoonrise, WiMoonset } from "react-icons/wi";
 import { motion } from "framer-motion";
 
+
+
 function MoonPhaseNow({width}){
     let SunCalc = require('suncalc');
+    let lune = require('lune')
+    let current_phase = lune.phase_hunt()
     const date = new Date();
     const moonPercentage = parseFloat(SunCalc.getMoonIllumination(date).phase.toFixed(5));
     const moonIllumination = `${parseInt(Math.floor(SunCalc.getMoonIllumination(date).fraction*100))}%`;
@@ -47,7 +51,9 @@ function coordinateIp(){
     const sunsetSun = DateTime.fromISO((new Date(SunCalc.getTimes(date, coordonateIp.lat, coordonateIp?.long).sunset)).toISOString()).toFormat("HH:ss");
     const moonRise = DateTime.fromISO((new Date(SunCalc.getMoonTimes(date, coordonateIp.lat, coordonateIp.long).rise).toISOString())).toFormat("HH:ss");
     const moonSet = DateTime.fromISO((new Date(SunCalc.getMoonTimes(date, coordonateIp.lat, coordonateIp.long).set).toISOString())).toFormat("HH:ss");
-    const daysNewMoon = parseInt(Moon2.lunarAge(date) -1);
+    const daysNewMoon =  parseInt(lune.phase().age);
+
+  
 
     //functie care ne arata unghiul lunii cand o privim
     function zenithAngle(){
@@ -58,28 +64,15 @@ function coordinateIp(){
     }
     //functie care ne arata urmatoarea luna noua
     function newNextMoon(){
-        const monthsArray = ['Jan', 'Feb', 'Ma ', 'Apr', 
-                             'May', 'Jun', 'Jul ', 'Aug',
-                             'Sep', 'Oct ', 'Nov', 'Dec'];
-        let dt = new Date();
-        let dateNewMoon = new Date(dt.setDate(dt.getDate() - daysNewMoon  + 29.53)).getDate();
-        let dateNewMoonMonth = new Date(dt.setDate(dt.getDate() - daysNewMoon  + 29.53)).getMonth();
-        return `${dateNewMoon} ${monthsArray[dateNewMoonMonth -1]}`
+        return DateTime.fromISO(new Date(current_phase.nextnew_date).toISOString()).toFormat("dd LLL")
     }
    
 
     //functie care ne arata urmatoarea luna plina
     function nextFullMoon(){
-        const monthsArray = ['Jan', 'Feb', 'Ma ', 'Apr', 
-                             'May', 'Jun', 'Jul ', 'Aug',
-                             'Sep', 'Oct ', 'Nov', 'Dec'];
         const dt = new Date();
-        const dateFullMoonDay = (new Date(dt.setDate(dt.getDate() - daysNewMoon + 29.53059 + 
-                                (new Date(dt.setDate(dt.getDate() - daysNewMoon  + 29.53)).getDate()/2)))).getDate();
-        const dateFullMoonMonth = (new Date(dt.setDate(dt.getDate() - daysNewMoon + 29.53059 + 
-                                (new Date(dt.setDate(dt.getDate() - daysNewMoon  + 29.53)).getDate()/2)))).getMonth();
-
-        return `${dateFullMoonDay} ${monthsArray[dateFullMoonMonth]}` 
+        return  DateTime.fromISO(new Date(dt.setDate(dt.getDate() - daysNewMoon + 29.53059 + 29.53059/2 )).toISOString()).toFormat("dd LLL");
+        
     }
 
     return(

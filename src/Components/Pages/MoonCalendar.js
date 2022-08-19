@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { motion } from 'framer-motion';
 
 function MoonCalendar({width}){
-    const{year, month, day} = DateTime.now()
+    const{year, month} = DateTime.now()
     const [startDate, setStartDate] = useState(new Date());
     const [monthYear, setMonthYear] = useState({
     year: year,
