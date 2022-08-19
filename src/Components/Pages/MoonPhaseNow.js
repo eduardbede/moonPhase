@@ -43,8 +43,6 @@ function coordinateIp(){
            coordinateIp();
        },[]);
 
-       
-
     const sunriseSun =  DateTime.fromISO((new Date(SunCalc.getTimes(date, coordonateIp.lat === ""? "" : coordonateIp.lat , coordonateIp.long).sunrise)).toISOString()).toFormat("HH:ss");
     const sunsetSun = DateTime.fromISO((new Date(SunCalc.getTimes(date, coordonateIp.lat, coordonateIp?.long).sunset)).toISOString()).toFormat("HH:ss");
     const moonRise = DateTime.fromISO((new Date(SunCalc.getMoonTimes(date, coordonateIp.lat, coordonateIp.long).rise).toISOString())).toFormat("HH:ss");
@@ -98,7 +96,7 @@ function coordinateIp(){
             </div>
             <div className="flex gap-28 md:gap-96">
                 <div className="flex flex-col justify-center items-center gap-2">
-                    <Moon phase={1} border={'0px'}/>
+                    <Moon phase={1} border={'0px'} lightColor={'black'}/>
                     <h1 className="text-white text-center px-4 md:px-0">Next New Moon:</h1>
                     <div className="text-white">{newNextMoon()}</div>
                 </div>

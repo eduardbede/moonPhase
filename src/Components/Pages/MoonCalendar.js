@@ -12,9 +12,9 @@ function MoonCalendar({width}){
     year: year,
     month: month
 });
-const monthsArray = ['January', 'February', 'March ', 'April', 
-                    'May', 'June', 'July ', 'August',
-                    'September', 'October ', 'November', 'December',];
+    const monthsArray = ['January', 'February', 'March ', 'April', 
+                         'May', 'June', 'July ', 'August',
+                         'September', 'October ', 'November', 'December',];
 
     let SunCalc = require('suncalc');
 
