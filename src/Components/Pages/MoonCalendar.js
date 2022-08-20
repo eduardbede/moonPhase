@@ -59,8 +59,9 @@ function MoonCalendar({width}){
         <motion.div initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5}}>
-            <div className='py-5'>
-                    <DatePicker selected={startDate} 
+            <div className='py-4'>
+                <h1 className='flex justify-center text-white text-lg'>Choose your date:</h1>
+                        <DatePicker selected={startDate} 
                                 onChange={(date) =>{
                                         /* setMonthYear({year: date.getFullYear(), month:date.getMonth() +1}) */
                                         setStartDate(date);

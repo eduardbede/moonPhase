@@ -20,7 +20,7 @@ function App() {
 
 
   return (
-    <div className="App min-h-screen"  style={{backgroundImage: `url(${sky2})`, backgroundSize: "fit", backgroundPosition: 'center'}}>
+    <div className="App min-h-screen" style={{backgroundImage: `url(${sky2})`, backgroundSize: "fit", backgroundPosition: 'center'}}>
       <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}

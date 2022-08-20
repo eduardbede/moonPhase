@@ -1,35 +1,29 @@
 import Moon from "react-moon";
-/* import { Moon as Moon2 } from "lunarphase-js"; */
 import { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import { WiSunrise, WiSunset, WiMoonrise, WiMoonset } from "react-icons/wi";
 import { motion } from "framer-motion";
 
-
-
 function MoonPhaseNow({width}){
+    let lune = require('lune');
+    let current_phase = lune.phase_hunt();
     let SunCalc = require('suncalc');
-    let lune = require('lune')
-    let current_phase = lune.phase_hunt()
     const date = new Date();
     const moonPercentage = parseFloat(SunCalc.getMoonIllumination(date).phase.toFixed(5));
-    const moonIllumination = `${parseInt(Math.floor(SunCalc.getMoonIllumination(date).fraction*100))}%`;
-    const [timeLive, setTimeLive] = useState(DateTime.now().toFormat('dd-MM-yyyy HH:mm'));
+    const moonIllumination = `${(SunCalc.getMoonIllumination(date).fraction*100).toFixed(1)}%`;
+    const [timeLive, setTimeLive] = useState(DateTime.now().toFormat('dd/MM/yyyy HH:mm'));
     const [coordonateIp, setCoordonateIp] = useState({
         lat: '',
         long: ''
     });
-
-    useEffect(()=>{
-        let interval = setInterval(() => {
-                setTimeLive(DateTime.now().toFormat('dd-MM-yyyy HH:mm'));
-            }, 60000);
-        return ()=>{
-           clearInterval(interval);
-        }
+    const [sunMoon, setSunMoon] = useState({
+        sunRise:" ",
+        sunSet: " ",
+        moonRise: " ",
+        moonSet: " "
     });
 
-function coordinateIp(){
+    function coordinateIp(){
         fetch("https://ipinfo.io/json?token=a52e57c897dccc")
         .then(res => res.json())
         .then(data=>{
@@ -47,14 +41,57 @@ function coordinateIp(){
            coordinateIp();
        },[]);
 
-    const sunriseSun =  DateTime.fromISO((new Date(SunCalc.getTimes(date, coordonateIp.lat === ""? "" : coordonateIp.lat , coordonateIp.long).sunrise)).toISOString()).toFormat("HH:ss");
-    const sunsetSun = DateTime.fromISO((new Date(SunCalc.getTimes(date, coordonateIp.lat, coordonateIp?.long).sunset)).toISOString()).toFormat("HH:ss");
-    const moonRise = DateTime.fromISO((new Date(SunCalc.getMoonTimes(date, coordonateIp.lat, coordonateIp.long).rise).toISOString())).toFormat("HH:ss");
-    const moonSet = DateTime.fromISO((new Date(SunCalc.getMoonTimes(date, coordonateIp.lat, coordonateIp.long).set).toISOString())).toFormat("HH:ss");
+    useEffect(()=>{
+        let interval = setInterval(() => {
+                setTimeLive(DateTime.now().toFormat('dd/MM/yyyy HH:mm'));
+            }, 60000);
+        return ()=>{
+           clearInterval(interval);
+        }
+    });
+
+    useEffect(()=>{
+        const sunriseSunToday = DateTime.fromISO((new Date(SunCalc.getTimes(date, coordonateIp.lat , coordonateIp.long).sunrise)).toISOString()).toFormat("HH:ss");
+        const sunsetSunToday = DateTime.fromISO((new Date(SunCalc.getTimes(date, coordonateIp.lat, coordonateIp?.long).sunset)).toISOString()).toFormat("HH:ss");
+
+        if(SunCalc.getMoonTimes(date, coordonateIp.lat , coordonateIp.long).rise === undefined){
+            setSunMoon(prevSun=>{
+                return {...prevSun ,
+                            sunRise: sunriseSunToday, 
+                            sunSet: sunsetSunToday,
+                            moonRise: "- -:- -" }
+            })
+        } else if(SunCalc.getMoonTimes(date, coordonateIp.lat , coordonateIp.long).rise !== undefined){
+            setSunMoon(prevSun=>{
+                return {...prevSun ,
+                        sunRise: sunriseSunToday, 
+                        sunSet: sunsetSunToday,
+                        moonRise:DateTime.fromISO(new Date(SunCalc.getMoonTimes(date, coordonateIp.lat , coordonateIp.long).rise).toISOString()).toFormat("HH:ss")
+                        };
+        });
+        };
+
+      if(SunCalc.getMoonTimes(date, coordonateIp.lat , coordonateIp.long).set === undefined){
+        setSunMoon(prevSun=>{
+            return {...prevSun ,
+                        sunRise: sunriseSunToday, 
+                        sunSet: sunsetSunToday,
+                        moonSet: "- -:- -" }
+            })
+        } else if(SunCalc.getMoonTimes(date, coordonateIp.lat , coordonateIp.long).set !== undefined){
+        setSunMoon(prevSun=>{
+            return {...prevSun ,
+                    sunRise: sunriseSunToday, 
+                    sunSet: sunsetSunToday,
+                    moonSet:DateTime.fromISO(new Date(SunCalc.getMoonTimes(date, coordonateIp.lat, coordonateIp.long).set).toISOString()).toFormat("HH:ss")
+                    }
+        });
+        
+    } 
+    },[SunCalc, coordonateIp.lat])
+
     const daysNewMoon =  parseInt(lune.phase().age);
-
   
-
     //functie care ne arata unghiul lunii cand o privim
     function zenithAngle(){
         const parallacticAngleMoon = SunCalc.getMoonPosition(date, coordonateIp.lat, coordonateIp.long).parallacticAngle
@@ -67,7 +104,6 @@ function coordinateIp(){
         return DateTime.fromISO(new Date(current_phase.nextnew_date).toISOString()).toFormat("dd LLL")
     }
    
-
     //functie care ne arata urmatoarea luna plina
     function nextFullMoon(){
         const dt = new Date();
@@ -105,21 +141,21 @@ function coordinateIp(){
             <div className="flex gap-20 pt-10 text-white text-2xl">
                 <div className="md:flex md:gap-2">
                     <div className="flex">
-                        {coordonateIp.lat !== "" && sunriseSun}
+                        {coordonateIp.lat !== "" &&  sunMoon.sunRise}
                         <WiSunrise size={"1.5em"} />
                     </div>
                     <div className="flex">
-                        {coordonateIp.lat !== "" && sunsetSun}
+                        {coordonateIp.lat !== "" && sunMoon.sunSet}
                         <WiSunset size={'1.5em'}/>
                     </div>
                 </div>
                 <div className="md:flex md:gap-2">
                     <div className="flex">
-                        {coordonateIp.lat !== "" && moonRise}
+                        {coordonateIp.lat !== "" && sunMoon.moonRise}
                         <WiMoonrise size={"1.5em"} />
                     </div>
                     <div className="flex">
-                        {coordonateIp.lat !== "" && moonSet}
+                        {coordonateIp.lat !== "" && sunMoon.moonSet}
                         <WiMoonset size={"1.5em"} />
                     </div>
                 </div>
